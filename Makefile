@@ -7,8 +7,8 @@ include ${PETSC_DIR}/lib/petsc/conf/variables
 include ${PETSC_DIR}/lib/petsc/conf/rules
 
 
-SOURCEC     = para.c
-EXECUTABLE  = parallel
+SOURCEC     = change_ie.c
+EXECUTABLE  = change
 
 
 all: $(EXECUTABLE)
