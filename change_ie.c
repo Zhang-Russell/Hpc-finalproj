@@ -1,4 +1,4 @@
-static char help[] = "Parallel 2D Heat Solver with switchable Explicit/Implicit methods and VTK Output. Corrected Version.\n\n";
+static char help[] = "Parallel 2D Heat Solver with switchable Explicit/Implicit methods and separate VTK Output files.\n\n";
 
 #include <petscdm.h>
 #include <petscdmda.h>
@@ -13,10 +13,9 @@ PetscErrorCode EnforceBoundaryConditions(DM da, Vec u)
 {
     PetscErrorCode ierr;
     DMDALocalInfo  info;
-    PetscScalar    **u_local; // CORRECTED: Use PetscScalar** type
+    PetscScalar    **u_local;
 
     ierr = DMDAGetLocalInfo(da, &info);CHKERRQ(ierr);
-    // CORRECTED: Use DMDAVecGetArray to get read-write access
     ierr = DMDAVecGetArray(da, u, &u_local);CHKERRQ(ierr);
 
     for (PetscInt j = info.ys; j < info.ys + info.ym; j++) {
@@ -26,7 +25,6 @@ PetscErrorCode EnforceBoundaryConditions(DM da, Vec u)
             }
         }
     }
-    // CORRECTED: Use DMDAVecRestoreArray
     ierr = DMDAVecRestoreArray(da, u, &u_local);CHKERRQ(ierr);
     return 0;
 }
@@ -49,7 +47,6 @@ int main(int argc, char **args) {
 
     ierr = PetscInitialize(&argc, &args, (char*)0, help); CHKERRQ(ierr);
     
-    // CORRECTED: Removed `ierr = ` from macro calls
     PetscOptionsBegin(PETSC_COMM_WORLD, "", "Heat Equation Solver Options", "");
     ierr = PetscOptionsEnum("-ts_type", "Time stepping method", "main", TimeSteppingTypes, (PetscEnum)ts_type, (PetscEnum*)&ts_type, NULL);CHKERRQ(ierr);
     ierr = PetscOptionsInt("-nx", "Grid points in x direction", "main", nx, &nx, NULL);CHKERRQ(ierr);
@@ -69,9 +66,8 @@ int main(int argc, char **args) {
 
     // Set Initial Conditions
     DMDALocalInfo info;
-    PetscScalar   **u_local; // CORRECTED: Use PetscScalar** type
+    PetscScalar   **u_local;
     ierr = DMDAGetLocalInfo(da, &info); CHKERRQ(ierr);
-    // CORRECTED: Use DMDAVecGetArray
     ierr = DMDAVecGetArray(da, u, &u_local); CHKERRQ(ierr);
     for (PetscInt j = info.ys; j < info.ys + info.ym; j++) {
         for (PetscInt i = info.xs; i < info.xs + info.xm; i++) {
@@ -79,7 +75,6 @@ int main(int argc, char **args) {
             else u_local[j][i] = 0.0;
         }
     }
-    // CORRECTED: Use DMDAVecRestoreArray
     ierr = DMDAVecRestoreArray(da, u, &u_local); CHKERRQ(ierr);
     ierr = EnforceBoundaryConditions(da, u); CHKERRQ(ierr);
 
@@ -169,12 +164,23 @@ int main(int argc, char **args) {
         ierr = VecDestroy(&laplacian_u); CHKERRQ(ierr);
     }
     
-    // Save final solution and Clean up
+    // MODIFIED: Save final solution with a different name based on the method
+    char        filename[PETSC_MAX_PATH_LEN];
     PetscViewer vtk_viewer;
-    ierr = PetscViewerVTKOpen(PETSC_COMM_WORLD, "final_solution.vts", FILE_MODE_WRITE, &vtk_viewer); CHKERRQ(ierr);
+
+    if (ts_type == TS_IMPLICIT) {
+        ierr = PetscSNPrintf(filename, sizeof(filename), "implicit_solution.vts"); CHKERRQ(ierr);
+    } else {
+        ierr = PetscSNPrintf(filename, sizeof(filename), "explicit_solution.vts"); CHKERRQ(ierr);
+    }
+    
+    ierr = PetscPrintf(PETSC_COMM_WORLD, "Writing final solution to %s\n", filename); CHKERRQ(ierr);
+
+    ierr = PetscViewerVTKOpen(PETSC_COMM_WORLD, filename, FILE_MODE_WRITE, &vtk_viewer); CHKERRQ(ierr);
     ierr = VecView(u, vtk_viewer); CHKERRQ(ierr);
     ierr = PetscViewerDestroy(&vtk_viewer); CHKERRQ(ierr);
 
+    // Clean up
     ierr = VecDestroy(&u); CHKERRQ(ierr); ierr = VecDestroy(&u_old); CHKERRQ(ierr);
     ierr = DMDestroy(&da); CHKERRQ(ierr);
     ierr = PetscFinalize();
