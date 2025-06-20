@@ -6,6 +6,7 @@ The program is written in C and utilizes the PETSc library to handle parallel da
 
 When testing locally, I encountered an error when nx is too large (5000000), which is due to too much data written to the checkpoint file, so please use the code in the nohdf5 folder.
 In the Taiyi test, the Makefile used is linked to the petsc library of the teaching assistant, so please use the Makefile in the ty folder
+If you want to change the grid(nx),you can change it in run.lsf
 ## Core Features
 
 **1D Heat Equation Solver**: Implements a parallel solver for the transient heat equation, based on the Finite Difference Method for spatial discretization.
