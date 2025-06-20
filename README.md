@@ -4,6 +4,8 @@ This project presents a parallel numerical solver for the one-dimensional transi
 
 The program is written in C and utilizes the PETSc library to handle parallel data structures, matrix assembly, and the solution of linear systems. It is designed for execution on high-performance computing clusters using MPI.
 
+When testing locally, I encountered an error when nx is too large (5000000), which is due to too much data written to the checkpoint file, so please use the code in the nohdf5 folder.
+In the Taiyi test, the Makefile used is linked to the petsc library of the teaching assistant, so please use the Makefile in the ty folder
 ## Core Features
 
 **1D Heat Equation Solver**: Implements a parallel solver for the transient heat equation, based on the Finite Difference Method for spatial discretization.
