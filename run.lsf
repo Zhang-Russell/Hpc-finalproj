@@ -1,0 +1,55 @@
+#!/bin/bash
+#BSUB -J HPCFINAL     # 作业名称 (Job Name)
+#BSUB -q short      # 提交到的队列名称 (e.g., debug, compute, normal)
+#BSUB -n 40              # 使用的MPI进程总数 (e.g., 16 cores)
+#BSUB -R "span[ptile=40]"    # 每个计算节点上运行的进程数 (tasks per node)
+#BSUB -W 00:30              # 作业运行的最长时间 (Wall-clock time limit, HH:MM)
+#BSUB -o output.%J.out      # 标准输出文件 (%J 会被替换为作业ID)
+#BSUB -e output.%J.err      # 标准错误文件
+
+# --- 1. 环境设置 (Environment Setup) ---
+# 清理当前环境，加载编译和运行所需的模块
+
+echo "========================================================="
+echo "Setting up environment..."
+module purge
+module load intel/2018.3      # 加载Intel编译器
+module load mpi/intel/2018.3   # 加载MPI库 
+echo "Loaded Modules:"
+module list
+echo "========================================================="
+
+
+# --- 2. 编译代码 (Compilation) ---
+# 
+echo "Compiling the code..."
+cd ${LS_SUBCWD}
+make clean
+make mms  
+echo "Compilation finished."
+echo "========================================================="
+
+
+# --- 3. 运行程序 (Execution) ---
+# 定义您想执行的命令
+# ${LSB_DJOB_NUMPROC} 是LSF提供的环境变量，其值等于您在 #BSUB -n 中设置的核数
+echo "Starting parallel run with ${LSB_DJOB_NUMPROC} processes..."
+
+# ---------在此处修改您的运行参数-----------
+
+# 示例1: 运行物理模拟 (隐式方法)
+EXEC_CMD="./mms -run_type physics -ts_type implicit -nx 1001 -final_time 20 -max_steps 400"
+
+# 示例2: 运行MMS验证 (显式方法, 小步长保证稳定)
+# EXEC_CMD="./mms -run_type mms -ts_type explicit -nx 101 -dt 0.00001"
+
+# 示例3: 进行并行性能测试 (隐式方法, 大问题规模)
+# EXEC_CMD="./mms -run_type physics -ts_type implicit -nx 16001 -max_steps 100"
+
+# ---------------------------------------------
+
+# 使用mpirun启动您的并行程序
+mpirun -np ${LSB_DJOB_NUMPROC} ${EXEC_CMD}
+
+echo "========================================================="
+echo "Job finished."

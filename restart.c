@@ -38,7 +38,7 @@ int main(int argc, char **args) {
     PetscErrorCode      ierr;
     TimeSteppingType    ts_type = TS_IMPLICIT;
     PetscInt            nx = 50, ny = 50, max_steps = 200, start_step = 0;
-    PetscReal           final_time = 0.2, diffusivity = 0.01, dt = 0.0;
+    PetscReal           final_time = 0.4, diffusivity = 0.01, dt = 0.0;
     PetscBool           flg_restart = PETSC_FALSE;
     char                checkpoint_file[] = "checkpoint.h5";
     PetscInt            checkpoint_interval = 10, vtk_interval = 20;

@@ -7,8 +7,9 @@ include ${PETSC_DIR}/lib/petsc/conf/variables
 include ${PETSC_DIR}/lib/petsc/conf/rules
 
 
-SOURCEC     = change_ie.c
-EXECUTABLE  = change
+SOURCEC     = mms.c
+EXECUTABLE  = mms
+
 
 
 all: $(EXECUTABLE)

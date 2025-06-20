@@ -1,0 +1,65 @@
+In file included from /work/mae-liuj/lib/petsc-3.16.6-opt/include/petscvec.h:9:0,
+                 from /work/mae-liuj/lib/petsc-3.16.6-opt/include/petscmat.h:6,
+                 from /work/mae-liuj/lib/petsc-3.16.6-opt/include/petscdm.h:6,
+                 from mms.c:3:
+/work/mae-liuj/lib/petsc-3.16.6-opt/include/petscsys.h:225:6: 错误：#error "PETSc was configured with one I_MPI mpi.h version but now appears to be compiling using a different I_MPI mpi.h version"
+ #    error "PETSc was configured with one I_MPI mpi.h version but now appears to be compiling using a different I_MPI mpi.h version"
+      ^
+mms.c: 在函数‘EnforceBoundaryConditions’中:
+mms.c:26:5: 错误：只允许在 C99 模式下使用‘for’循环初始化声明
+     for (PetscInt j = info.ys; j < info.ys + info.ym; j++) {
+     ^
+mms.c:26:5: 附注：使用 -std=c99 或 -std=gnu99 来编译您的代码
+mms.c:27:9: 错误：只允许在 C99 模式下使用‘for’循环初始化声明
+         for (PetscInt i = info.xs; i < info.xs + info.xm; i++) {
+         ^
+In file included from /work/mae-liuj/lib/petsc-3.16.6-opt/include/petscsys.h:1510:0,
+                 from /work/mae-liuj/lib/petsc-3.16.6-opt/include/petscvec.h:9,
+                 from /work/mae-liuj/lib/petsc-3.16.6-opt/include/petscmat.h:6,
+                 from /work/mae-liuj/lib/petsc-3.16.6-opt/include/petscdm.h:6,
+                 from mms.c:3:
+mms.c: 在函数‘main’中:
+/work/mae-liuj/lib/petsc-3.16.6-opt/include/petscoptions.h:157:52: 警告：语句不起作用 [-Wunused-value]
+ #define    PetscOptionsBegin(comm,prefix,mess,sec) 0; do {\
+                                                    ^
+mms.c:54:5: 附注：in expansion of macro ‘PetscOptionsBegin’
+     PetscOptionsBegin(PETSC_COMM_WORLD, "", "Heat Equation Solver Options", "");
+     ^
+mms.c:82:9: 警告：隐式声明函数‘PetscViewerHDF5Open’ [-Wimplicit-function-declaration]
+         ierr = PetscViewerHDF5Open(PETSC_COMM_WORLD, checkpoint_file, FILE_MODE_READ, &hdf5_viewer); CHKERRQ(ierr);
+         ^
+mms.c:106:9: 错误：只允许在 C99 模式下使用‘for’循环初始化声明
+         for (PetscInt j=info.ys; j<info.ys+info.ym; j++) {
+         ^
+mms.c:107:13: 错误：只允许在 C99 模式下使用‘for’循环初始化声明
+             for (PetscInt i=info.xs; i<info.xs+info.xm; i++) {
+             ^
+mms.c:129:9: 错误：只允许在 C99 模式下使用‘for’循环初始化声明
+         for (PetscInt j = info.ys; j < info.ys + info.ym; j++) {
+         ^
+mms.c:130:13: 错误：只允许在 C99 模式下使用‘for’循环初始化声明
+             for (PetscInt i = info.xs; i < info.xs + info.xm; i++) {
+             ^
+mms.c:154:9: 错误：只允许在 C99 模式下使用‘for’循环初始化声明
+         for (PetscInt j = info.ys; j < info.ys + info.ym; j++) {
+         ^
+mms.c:155:13: 错误：只允许在 C99 模式下使用‘for’循环初始化声明
+             for (PetscInt i = info.xs; i < info.xs + info.xm; i++) {
+             ^
+mms.c:169:5: 错误：只允许在 C99 模式下使用‘for’循环初始化声明
+     for (PetscInt step = start_step; step < max_steps; ++step) {
+     ^
+mms.c:176:13: 错误：只允许在 C99 模式下使用‘for’循环初始化声明
+             for (PetscInt j = info.ys; j < info.ys + info.ym; j++) {
+             ^
+mms.c:177:17: 错误：只允许在 C99 模式下使用‘for’循环初始化声明
+                 for (PetscInt i = info.xs; i < info.xs + info.xm; i++) {
+                 ^
+mms.c:232:9: 错误：只允许在 C99 模式下使用‘for’循环初始化声明
+         for (PetscInt j = info.ys; j < info.ys + info.ym; j++) {
+         ^
+mms.c:233:13: 错误：只允许在 C99 模式下使用‘for’循环初始化声明
+             for (PetscInt i = info.xs; i < info.xs + info.xm; i++) {
+             ^
+make: *** [mms] 错误 1
+

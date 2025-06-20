@@ -42,8 +42,8 @@ int main(int argc, char **args) {
     PetscErrorCode      ierr;
     RunType             run_type = RUN_PHYSICS;
     TimeSteppingType    ts_type = TS_IMPLICIT;
-    PetscInt            nx = 101, max_steps = 200, start_step = 0; // MODIFIED FOR 1D: ny removed
-    PetscReal           final_time = 0.2, diffusivity = 0.01, dt = 0.0;
+    PetscInt            nx = 101, max_steps = 600, start_step = 0; // MODIFIED FOR 1D: ny removed
+    PetscReal           final_time = 3, diffusivity = 0.01, dt = 0.0;
     PetscBool           flg_restart = PETSC_FALSE;
     char                checkpoint_file[] = "checkpoint.h5";
     PetscInt            checkpoint_interval = 20, vtk_interval = 20;
@@ -201,6 +201,8 @@ int main(int argc, char **args) {
             ierr = EnforceBoundaryConditions(da, u);CHKERRQ(ierr);
         }
 
+        // --- CHECKPOINTING SECTION DISABLED ---
+        /*
         if ((step + 1) % checkpoint_interval == 0 && (step + 1) < max_steps) {
             PetscViewer hdf5_viewer;
             ierr = PetscPrintf(PETSC_COMM_WORLD, "Writing checkpoint at step %ld to %s\n", (long)(step + 1), checkpoint_file); CHKERRQ(ierr);
@@ -221,6 +223,8 @@ int main(int argc, char **args) {
             ierr = VecDestroy(&v_step); CHKERRQ(ierr);
             ierr = PetscViewerDestroy(&hdf5_viewer); CHKERRQ(ierr);
         }
+        */
+
         if (vtk_interval > 0 && ((step + 1) % vtk_interval == 0 || (step + 1) == max_steps)) {
              PetscViewer vtk_viewer; char filename[PETSC_MAX_PATH_LEN];
              ierr = PetscSNPrintf(filename, sizeof(filename), "solution-%04ld.vts", (long)(step + 1)); CHKERRQ(ierr);
